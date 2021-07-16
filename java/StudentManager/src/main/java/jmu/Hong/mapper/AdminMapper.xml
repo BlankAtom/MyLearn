@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.Hong.mapper.AdminMapper">
+
+
+    
+    <insert id="addTeacher" keyColumn="id">
+        insert into webstu.teacher(id, name, sex, age, ranks, phone, address, office_id, email, pinyin)
+        values (#{tno}, #{tname}, #{sex}, #{age}, #{ranks}, #{phone}, #{address}, #{office}, #{email}, #{pinyin})
+        on DUPLICATE key update
+            name = #{tname},
+            sex = #{sex},
+            age = #{age},
+            ranks = #{ranks},
+            phone = #{phone},
+            address = #{address},
+            office_id = #{office},
+            email = #{email},
+            pinyin = #{pinyin}
+    </insert>
+
+    <insert id="udpAddress" keyColumn="sno">
+        insert into webstu.family(sno, address)
+        values (#{sno}, #{address})
+        on DUPLICATE key update
+            address = #{address}
+    </insert>
+
+    <insert id="insertStudent" keyColumn="id" useGeneratedKeys="true">
+        insert into webstu.student(id, name, sex, date,cla_id, phone, email, card_id, pinyin, from_id)
+        values (#{sno},#{sname}, #{sex}, #{birth}, #{classId}, #{phone}, #{email}, #{cardId}, #{pinyin}, #{fromId});
+    </insert>
+
+
+    <insert id="addCourse">
+            insert into webstu.cou_class(class_id, cno, tno, class_type, score_state, deadline)
+            values
+            (#{classId}, #{cno},#{tno},#{classType},#{scoreState},#{deadline});
+    </insert>
+
+    <update id="udpTeacher" keyColumn="id">
+        update webstu.teacher set
+        name = #{tname},
+        sex = #{sex},
+        age = #{age},
+        ranks = #{ranks},
+        phone = #{phone},
+        address = #{address},
+        office_id = #{oid},
+        email = #{email},
+        pinyin = #{pinyin}
+        <where>
+            and id=#{tno}
+        </where>
+    </update>
+
+    <insert id="udpBank" keyColumn="user">
+        insert into webstu.bank_info(user, card, company)
+        values (#{user}, #{card}, #{company})
+        on DUPLICATE key update
+            company = #{company},
+            card = #{card}
+    </insert>
+
+    <update id="udpStudent" keyColumn="id">
+        update webstu.student set
+        name=#{sname},
+            sex=#{sex},
+            date=#{birth},
+            cla_id=#{classId},
+            phone=#{phone},
+            email=#{email},
+            card_id=#{cardId},
+            pinyin=#{pinyin},
+            from_id=#{fromId};
+            <where>
+                and id=#{sno};
+            </where>
+    </update>
+
+    <update id="udpCourse" >
+        update webstu.cou_class set
+        class_type=#{ctype},
+        score_state=#{sstate},
+        deadline=#{deadline}
+        <where>
+            <if test="classId != null and classId != ''">and class_Id=#{classId}</if>
+            <if test="tno != null and tno != ''">and tno=#{tno}</if>
+            <if test="cno != null and cno != ''">and cno=#{cno}</if>
+        </where>
+    </update>
+
+    <select id="getAllCourse" resultType="CouClass">
+        select * from webstu.cou_class_tea_type_view
+        <where>
+            <if test="classId!=null and classId!= '' ">and classId like concat('%', #{classId}, '%')</if>
+            <if test="tname!=null and tname!= '' ">and tname like concat('%', #{tname}, '%')</if>
+            <if test="cname!=null and cname!= '' ">and cname like concat('%', #{cname}, '%')</if>
+        </where>
+    </select>
+
+    <select id="getCourseIdByName" resultType="String">
+        select id from  webstu.courses
+        <where>
+            and name = #{cname}
+        </where>
+    </select>
+    <select id="getTeacherIdByName" resultType="String">
+        select id from  webstu.teacher
+        <where>
+            and name = #{tname}
+        </where>
+    </select>
+    <select id="getTeacher" resultType="TeacherInfo">
+        select * from webstu.tea_office_college_view
+        <where>
+            <if test="tno != null and tno != ''">
+                and tno like concat('%', #{tno}, '%')
+            </if>
+            <if test="oname != null and oname != ''">
+                and oname like concat('%', #{oname}, '%')
+            </if>
+            <if test="tname != null and tname != ''">
+                and tname like concat('%', #{tname}, '%')
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="getAllOffice" resultType="Office">
+        select* from webstu.office_college_fiew;
+    </select>
+
+    <select id="getProvinceIdByName" resultType="int">
+        select id from webstu.province where name=#{pname};
+    </select>
+
+    <select id="getSexIdByName" resultType="int">
+        select id from  webstu.sex_type where name = #{sexname};
+    </select>
+
+    <select id="getClassIdByName" resultType="String">
+        select cid from  webstu.classes_majors_colleges_view where classname=#{classname};
+    </select>
+
+    <select id="getAllStudents" resultType="StudentInfo">
+        select * from  webstu.stu_info_view;
+    </select>
+
+    <select id="getStudentsByInfo" resultType="StudentInfo">
+        select * from webstu.stu_info_view
+        <where>
+            <if test="sno != null and sno != ''">
+                and sno like concat('%', #{sno}, '%')
+            </if>
+            <if test="classname != null and classname != ''">
+                and classname like concat('%', #{classname}, '%')
+            </if>
+            <if test="sname != null and sname != ''">
+                and sname like concat('%', #{sname}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllColleges" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select  distinct collegename from classes_majors_colleges_view
+
+    </select>
+
+    <select id="getAllMajors" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select  distinct  majorname from webstu.classes_majors_colleges_view
+        <where>
+            and collegename=#{collegename}
+        </where>
+    </select>
+
+    <select id="getAllClasses"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select distinct classname from webstu.classes_majors_colleges_view
+        <where>
+            and majorname=#{majorname}
+        </where>
+    </select>
+
+    <select id="getAllClasses_2"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select distinct classname from webstu.classes_majors_colleges_view
+    </select>
+
+    <select id="getAllCourseNames"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select distinct name cname from webstu.courses
+    </select>
+
+    <select id="getAllFroms" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select  distinct name pname from  webstu.province;
+    </select>
+
+    <select id="getAllTeacher" resultType="TeacherInfo">
+        select * from webstu.tea_office_college_view
+    </select>
+
+    <select id="getOfficeIdByName" resultType="int">
+        select oid from webstu.office_college_fiew
+        <where>
+            and oname=#{oname}
+        </where>
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.Hong.mapper.TeacherMapper">
+
+    <insert id="changeTeaBank"  keyColumn="user" useGeneratedKeys="true">
+        insert into webstu.bank_info(card, user, company)
+        values (#{bankCard}, #{tno}, #{bankCompany})
+        on DUPLICATE key update
+            company=#{bankCompany} ,
+            card = #{bankCard}
+    </insert>
+
+    <insert id="insertGrade" >
+        insert into study_table(sno, check_type, exam_type, cno, percent, grade)
+        values(#{sno},#{ctype},#{etype},#{course},#{percent},#{grade})
+    </insert>
+
+    <update id="changeTeaAddress" keyColumn="id">
+        update webstu.teacher set post_code = #{pcode}, address=#{address}
+        <where>
+            and id = #{tno}
+        </where>
+    </update>
+
+    <select id="getInfo" resultType="TeacherInfo">
+        select * from webstu.tea_office_college_view
+        <where>
+            AND tno=#{tno}
+        </where>
+    </select>
+
+
+
+    <select id="getOnlyCoursesBySno" resultType="CnoCourse">
+        select c2.id cno , cname from
+        stu_cou_allname_view scav , courses c2
+        <where>
+            and sno = #{sno} and scav.cname = c2.name
+        </where>
+    </select>
+
+
+    <select id="getGradeInfo" resultType="TeacherGradeInfo">
+        select * from webstu.tea_stu_grade_info_view
+        <where>
+                and tno = #{tno}
+            <if test="classname != null and classname != '' and classname != 'null' ">
+                and classname like concat('%', #{classname},'%')
+            </if>
+            <if test="sno != null and sno != '' and sno != 'null' ">
+                and sno like concat('%', #{sno},'%')
+            </if>
+            <if test="sname != null and sname != '' and sname != 'null' ">
+                and sname like concat('%', #{sname},'%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="getClasses" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select DISTINCT  classname from webstu.tea_stu_grade_info_view
+        <where>
+            and tno = #{tno}
+        </where>
+    </select>
+
+   <!-- /*字符串中使用#}不能识别*/
+    /*注释写在标签里时如果使用了占位符，会导致#}空错误*/
+    另外，使用上两行的注释方式会导致文件mapper的匹配错误-->
+
+
+
+</mapper>

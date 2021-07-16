@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.Hong.mapper.StudentMapper">
+
+    <select id="getStudentInfo" resultType="StudentInfo">
+        select * from webstu.stu_info_view
+        <where>
+                AND sno=#{sno}
+        </where>
+    </select>
+
+    <select id="getCoursesInfo" resultType="StudentCoursesInfo">
+        select* from webstu.stu_cou_allname_view
+        <where>
+            AND sno=#{sno}
+        </where>
+    </select>
+
+    <select id="getAwardsByID" resultType="Award">
+        select * from webstu.stu_awards_view
+        <where>
+            and sno=#{sno}
+        </where>
+    </select>
+
+    <select id="getSCGrade" resultType="SCGrade">
+        select * from webstu.sc_total_grade_view
+        <where>
+            and sno=#{sno}
+        </where>
+    </select>
+
+    <select id="getGrades" resultType="Grades">
+        select * from webstu.sc_grade_view
+        <where>
+            and sno=#{sno}
+        </where>
+    </select>
+
+    <select id="getCreditSum" resultType="SumCredits">
+        select * from stu_credit_sum_view
+        <where>
+            and sno=#{sno}
+        </where>
+    </select>
+
+    <update id="changePassword" parameterType="User">
+        update webstu.users
+        set upwd=#{upwd}
+        <where>
+            and uid=#{uid}
+        </where>
+    </update>
+
+    <insert id="changeAddress" parameterType="User" keyColumn="sno" useGeneratedKeys="true">
+        insert into webstu.family(sno, address, post_code)
+        values (#{sno}, #{address}, #{post})
+        on DUPLICATE key update
+            address=#{address} ,
+            post_code = #{post}
+    </insert>
+
+</mapper>

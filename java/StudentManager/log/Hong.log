@@ -1,0 +1,6 @@
+[INFO][20-06-23][dao.UserDaoTest]info: 进入了testLog4j
+[DEBUG][20-06-23][dao.UserDaoTest]debug: 进入了testLog4j
+[ERROR][20-06-23][dao.UserDaoTest]error: 进入了testLog4j
+[INFO][20-06-23][dao.UserDaoTest]info: 进入了testLog4j
+[DEBUG][20-06-23][dao.UserDaoTest]debug: 进入了testLog4j
+[ERROR][20-06-23][dao.UserDaoTest]error: 进入了testLog4j
