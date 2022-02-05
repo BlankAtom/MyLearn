@@ -2,7 +2,7 @@
 
 web路径下为前端文件
 
-
+前端项目为：[blackswords/StudentManager-Vue-Project](https://github.com/blackswords/MyLearn/tree/master/vue/StudentManager-Vue-Project)
 
 ## 开发环境
 
